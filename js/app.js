@@ -58,14 +58,12 @@ function createCard(data) {
         <div class="card-body">
           <h3 class="card-title">${data.make} ${data.model} ${data.engine_volume} (${data.year})</h3>
           <h4 class="card-price">${data.price}$</h4>
-          <div class="row info-block">
-          <div class="col-6" ml-5><i class="fas fa-tachometer-alt"></i>${data.odo}</div>
-          <div class="col-6"><i class="fas fa-map-marker-alt"></i>${data.country}</div>
-          </div>
-          <div class="row info-block">
-          <div class="col-6"><i class="fas fa-gas-pump me-10"></i>${data.fuel} ${data.engine_volume}</div>
-          <div class="col-6"><i class="fas fa-cogs"></i>${data.transmission}</div>
-          </div>
+          <ul class="info-block">
+            <li><i class="fas fa-tachometer-alt"></i>${data.odo}km</li>
+            <li><i class="fas fa-map-marker-alt"></i>${data.country}</li>
+            <li><i class="fas fa-gas-pump me-10"></i>${data.fuel} ${data.engine_volume}L</li>
+            <li><i class="fas fa-cogs"></i>${data.transmission}</li>
+          </ul>
           <h5 class="card-rating text-warning"> ${starIcons} ${data.rating}</h5>
           ${data.vin ? `<p class="card-vin ${data.vin_check ? 'text-success' : 'text-warning'}">${data.vin_check ? `<i class="fas fa-check me-2"></i>` : `<i class="fas fa-times me-2"></i>`}${data.vin}</p>` : `<p class="card-vin">Продавець не надав VIN код!</p>`}
           <a href="tel:${data.phone}" class="btn btn-success call-btn">Call</a>
