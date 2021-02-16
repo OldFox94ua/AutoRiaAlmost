@@ -18,7 +18,24 @@
     <div class="container">
       <h1>Car List</h1>
       <div class="row">
-        <div class="col-12 top-bar">top bar</div>
+        <div class="col-12 mb-3 top-bar d-flex justify-content-between align-items-center">
+          <select name="sortSelect" id="sortSelect" class="sort-select w-25 p-1">
+            <option selected disabled>Sort by...</option>
+            <option value="price-ab">По цене (от дешёвых к дорогим)</option>
+            <option value="price-ba">По цене (от дорогих к дешёвым)</option>
+            <option value="odo-ab">По пробегу (от меньшего к большему)</option>
+            <option value="odo-ba">По пробегу (от большего к меньшему)</option>
+            <option value="year-ba">По году выпуска (сначала новые)</option>
+            <option value="year-ab">По году выпуска (сначала старые)</option>
+            <option value="rating-ba">По рейтингу (сначала популярные)</option>
+            <option value="rating-ab">По рейтингу (сначала непопулярные)</option>
+            <option value="make-ab">По производителю (А-Я)</option>
+          </select>
+          <div class="masonry-btns" id="masonryBtns">
+            <button data-view="1" class="btn btn-success p-2"><i class="fas fa-bars"></i></button>
+            <button data-view="2" class="btn btn-secondary p-2"><i class="fas fa-th-large"></i></button>
+          </div>
+        </div>
         <div class="col-3 filter-bar">filter bar</div>
         <div class="col-9 content-bar">
           <div class="row g-0 row-cols-1 card-list" id="cardList">
