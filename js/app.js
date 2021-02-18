@@ -4,6 +4,9 @@ const sortSelectEl = document.getElementById('sortSelect')
 const masonryBtnsEl = document.getElementById('masonryBtns')
 
 
+
+
+
 // {
 //     "id": "89aed5b8c686ebd713a62873e4cd756abab7a106",
 //     "make": "BMW",
@@ -100,14 +103,25 @@ function createCard(data) {
           <h3 class="card-title">${data.make} ${data.model} ${data.engine_volume} (${data.year})</h3>
           <h4 class="card-price">${data.price}$</h4>
           <ul class="info-block">
-            <li><i class="fas fa-tachometer-alt"></i>${data.odo} km</li>
-            <li><i class="fas fa-map-marker-alt"></i>${data.country}</li>
-            <li><i class="fas fa-gas-pump me-10"></i>${data.fuel} ${data.engine_volume} L</li>
-            <li><i class="fas fa-cogs"></i>${data.transmission}</li>
+            <li title="car mileage"><i class="fas fa-tachometer-alt" ></i>${data.odo} km</li>
+            <li title="location"><i class="fas fa-map-marker-alt" ></i>${data.country}</li>
+            <li title="engine information"><i class="fas fa-gas-pump"></i>${data.fuel} ${data.engine_volume} L</li>
+            <li title="transmission type"><i class="fas fa-cogs"></i>${data.transmission}</li>
           </ul>
           <h5 class="card-rating text-warning"> ${starIcons}</h5>
+          <ul class="addition-info d-flex justify-content-between mt-3">
+            <li><i class="fas fa-road"></i>${data.consume.road} L/km</li>
+            <li><i class="fas fa-city"></i>${data.consume.city} L/km</li>
+            <li><i class="fas fa-car-side"></i>${data.consume.mixed} L/km</li>
+          </ul>
           ${data.vin ? `<p class="card-vin ${data.vin_check ? 'text-success' : 'text-warning'}">${data.vin_check ? `<i class="fas fa-check me-2"></i>` : `<i class="fas fa-times me-2"></i>`}${data.vin}</p>` : `<p class="card-vin">Продавець не надав VIN код!</p>`}
-          <a href="tel:${data.phone}" class="btn btn-success call-btn">Call</a>
+          <div class=" d-flex justify-content-between">
+            <a href="tel:${data.phone}" class="btn btn-success call-btn">Call</a>
+            <div class="selection-buttons">
+              <i class="far fa-star"></i>
+              <i class="fas fa-balance-scale"></i>
+            </div> 
+          </div>
         </div>
       </div>
       <div class="col-12 card-footer text-muted">
@@ -119,7 +133,6 @@ function createCard(data) {
     </div>
   </div>`
 }
-
 
 //Utils
 function findSiblings(DOMelement) {
