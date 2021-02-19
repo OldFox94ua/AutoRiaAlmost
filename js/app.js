@@ -1,9 +1,11 @@
+
 let CARS = JSON.parse(DATA)
+console.log(CARS.length)
 const cardListEl = document.getElementById('cardList')
 const sortSelectEl = document.getElementById('sortSelect')
 const masonryBtnsEl = document.getElementById('masonryBtns')
-
-
+const searchFormEl = document.getElementById('searchForm')
+const moreBtnEl = document.getElementById('moreBtn')
 
 
 
@@ -30,6 +32,35 @@ const masonryBtnsEl = document.getElementById('masonryBtns')
 //     "odo": 394036,
 //     "consume": { "road": 4.8, "city": 12.3, "mixed": 8.4 }
 //   }
+renderCards(CARS, cardListEl)
+
+moreBtnEl.addEventListener('click', event => {
+  renderCards(CARS, cardListEl)
+})
+
+searchFormEl.addEventListener('submit', function (event) {
+  event.preventDefault()
+
+  console.time('search-time ->>>');
+  const searchFields = ['make', 'model', 'year']
+  const query = this.search.value.trim().toLowerCase().split(' ').filter(word => word.length > 1)
+  CARS = JSON.parse(DATA).filter(car => {
+    return query.every(word => {
+      return searchFields.some(field => {
+        return `${car[field]}`.trim().toLowerCase().includes(word)
+      })
+    })
+  })
+  console.timeEnd('search-time ->>>');
+  console.log(CARS);
+  renderCards(CARS, cardListEl, true)
+})
+
+
+
+
+
+
 masonryBtnsEl.addEventListener('click', event => {
   const btnEl = event.target.closest('.btn')
   if (btnEl) {
@@ -37,7 +68,7 @@ masonryBtnsEl.addEventListener('click', event => {
     if (view == '1') {
       cardListEl.classList.remove('row-cols-2')
       cardListEl.classList.add('row-cols-1')
-    } else if (view == '2'){
+    } else if (view == '2') {
       cardListEl.classList.remove('row-cols-1')
       cardListEl.classList.add('row-cols-2')
     }
@@ -53,15 +84,15 @@ masonryBtnsEl.addEventListener('click', event => {
 sortSelectEl.addEventListener('change', function (event) {
   let [key, type] = this.value.split('-')
   if (type == 'ab') {
-    CARS.sort((a,b) => {
+    CARS.sort((a, b) => {
       if (typeof a[key] === 'string') {
         return a[key].localeCompare(b[key])
       } else if (typeof a[key] === 'number' || typeof a[key] === 'boolean') {
         return a[key] - b[key]
       }
     })
-  } else if(type == 'ba'){
-    CARS.sort((a,b) => {
+  } else if (type == 'ba') {
+    CARS.sort((a, b) => {
       if (typeof b[key] === 'string') {
         return b[key].localeCompare(a[key])
       } else if (typeof b[key] === 'number' || typeof b[key] === 'boolean') {
@@ -69,30 +100,46 @@ sortSelectEl.addEventListener('change', function (event) {
       }
     })
   }
-  renderCards(CARS, cardListEl)
+  renderCards(CARS, cardListEl, true)
 })
 
-renderCards(CARS, cardListEl)
 
-function renderCards(dataArray, DOMelement) {
-    let html = ''
-    dataArray.forEach(car => {
-        html += createCard(car)
-    });
-    DOMelement.innerHTML = html
+
+function renderCards(dataArray, DOMelement, clear) {
+  moreBtnEl.classList.remove('d-none')
+  const count = 10
+  if (clear) {
+    DOMelement.innerHTML = ''
+  }
+  const length = DOMelement.children.length
+  let html = ''
+  if (dataArray.length > 0) {
+    for (let i = 0; i < count; i++) {
+      const car = dataArray[length + i]
+      if (!car) {
+        moreBtnEl.classList.add('d-none')
+        break
+      }
+      html += createCard(car)
+    }
+  } else{
+    html = `<h3 class="text-center text-danger">No cars :((</h3>`
+  }
+
+  DOMelement.insertAdjacentHTML('beforeend', html)
 }
 
 function createCard(data) {
-    let starIcons = ''
-    for (let i = 0; i < 5; i++) {
-        if (i < data.rating) {
-            starIcons += '<i class="fas fa-star"></i>'
-        } else {
-            starIcons += '<i class="far fa-star"></i>'
-        }
+  let starIcons = ''
+  for (let i = 0; i < 5; i++) {
+    if (i < data.rating) {
+      starIcons += '<i class="fas fa-star"></i>'
+    } else {
+      starIcons += '<i class="far fa-star"></i>'
     }
+  }
 
-    return `<div class="col card mb-3">
+  return `<div class="col card mb-3">
     <div class="row g-0">
       <div class="col-4 card-img-wrap position-relative">
       ${data.top ? `<div class="card-top bg-success text-light">TOP</div>` : ''}
