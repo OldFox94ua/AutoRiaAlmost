@@ -1,6 +1,10 @@
 ul {
   list-style: none;
 }
+.fieldset-group{
+  max-height: 300px;
+  overflow: auto;
+}
 .card-list.row-cols-2 {
   justify-content: space-between;
 }

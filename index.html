@@ -44,7 +44,13 @@
             <button data-view="2" class="btn btn-secondary p-2"><i class="fas fa-th-large"></i></button>
           </div>
         </div>
-        <div class="col-3 filter-bar">filter bar</div>
+        <div class="col-3 filter-bar">
+          <form class="filter-form" id="filterForm">
+            
+            <button type="submit" class="btn btn-success">Filter</button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
+          </form>
+        </div>
         <div class="col-9 content-bar pb-5">
           <div class="row g-0 row-cols-1 card-list" id="cardList">
             

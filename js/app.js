@@ -6,9 +6,12 @@ const sortSelectEl = document.getElementById('sortSelect')
 const masonryBtnsEl = document.getElementById('masonryBtns')
 const searchFormEl = document.getElementById('searchForm')
 const moreBtnEl = document.getElementById('moreBtn')
+const filterFormEl= document.getElementById('filterForm')
+const filterFields = ['make','rating', 'fuel', 'transmission', 'color']
 
 
 
+renderCards(CARS, cardListEl)
 // {
 //     "id": "89aed5b8c686ebd713a62873e4cd756abab7a106",
 //     "make": "BMW",
@@ -32,7 +35,96 @@ const moreBtnEl = document.getElementById('moreBtn')
 //     "odo": 394036,
 //     "consume": { "road": 4.8, "city": 12.3, "mixed": 8.4 }
 //   }
-renderCards(CARS, cardListEl)
+
+
+
+{/* <fieldset class="mb-3">
+              <legend>Fuel</legend>
+              <div class="fieldset-group d-flex flex-column">
+                <label>
+                  <input type="checkbox" name="fuel" value="Benzin">
+                  Benzin
+                </label>
+                <label>
+                  <input type="checkbox" name="fuel" value="Diesel">
+                  Diesel
+                </label>
+                <label>
+                  <input type="checkbox" name="fuel" value="Propan">
+                  Propan
+                </label>
+              </div>
+            </fieldset> */}
+
+
+filterFormEl.addEventListener('submit', function (event) {
+  event.preventDefault()
+
+  const query = []
+  filterFields.forEach(field => {
+    const values = []
+    Array.from(this[field]).forEach(input => {
+        if (input.checked) {
+          values.push(input.value)
+        }
+    })
+    query.push(values)
+  })
+
+  console.log(query);
+
+  CARS = JSON.parse(DATA).filter(car => {
+    return query.every((values, i) => {
+      return values.length == 0 ? true : values.includes(`${car[filterFields[i]]}`)
+    })
+  })
+  console.log(CARS);
+  renderCards(CARS, cardListEl, true)
+
+})
+
+renderFilterForm(filterFields, filterFormEl, CARS)
+
+function renderFilterForm(fields, formEl, cars) {
+  let formHtml = ''
+  
+  fields.forEach(field => {
+    const values = new Set(cars.map(car => car[field]).sort())
+    formHtml += createFilterFieldset(field, values)
+  })
+
+  formEl.insertAdjacentHTML('afterBegin', formHtml)
+}
+
+function createFilterFieldset(field, values) {
+  let inputsHtml = ''
+
+  values.forEach(value => inputsHtml += createFilterCheckbox(field, value))
+
+  return `<fieldset class="mb-3">
+  <legend>${field}</legend>
+  <div class="fieldset-group d-flex flex-column">
+    ${inputsHtml}
+  </div>
+</fieldset>`
+}
+
+function createFilterCheckbox(key, value) {
+  return `<label>
+  <input type="checkbox" name="${key}" value="${value}">
+  ${value}
+</label>`
+}
+
+
+
+
+
+
+
+
+
+
 
 moreBtnEl.addEventListener('click', event => {
   renderCards(CARS, cardListEl)
