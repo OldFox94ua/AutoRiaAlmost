@@ -6,8 +6,20 @@ const sortSelectEl = document.getElementById('sortSelect')
 const masonryBtnsEl = document.getElementById('masonryBtns')
 const searchFormEl = document.getElementById('searchForm')
 const moreBtnEl = document.getElementById('moreBtn')
-const filterFormEl= document.getElementById('filterForm')
-const filterFields = ['make','rating', 'fuel', 'transmission', 'color']
+const filterFormEl = document.getElementById('filterForm')
+const filterFields = ['make', 'rating', 'fuel', 'transmission', 'color']
+const dateFormatter = new Intl.DateTimeFormat()
+const timeFormatter = new Intl.DateTimeFormat(undefined, {
+  hour: '2-digit',
+  minute: '2-digit'
+})
+
+const rateUSDtoUAH = 27.8423
+
+if (!localStorage.getItem('wishlist')) {
+  localStorage.setItem('wishlist', JSON.stringify([]))
+}
+const wishlistLS = JSON.parse(localStorage.getItem('wishlist'))
 
 
 
@@ -64,9 +76,9 @@ filterFormEl.addEventListener('submit', function (event) {
   filterFields.forEach(field => {
     const values = []
     Array.from(this[field]).forEach(input => {
-        if (input.checked) {
-          values.push(input.value)
-        }
+      if (input.checked) {
+        values.push(input.value)
+      }
     })
     query.push(values)
   })
@@ -87,7 +99,7 @@ renderFilterForm(filterFields, filterFormEl, CARS)
 
 function renderFilterForm(fields, formEl, cars) {
   let formHtml = ''
-  
+
   fields.forEach(field => {
     const values = new Set(cars.map(car => car[field]).sort())
     formHtml += createFilterFieldset(field, values)
@@ -123,7 +135,21 @@ function createFilterCheckbox(key, value) {
 
 
 
-
+cardListEl.addEventListener('click', event => {
+  const wishBtnEl = event.target.closest('.btn-wish')
+  if (wishBtnEl) {
+    const carId = wishBtnEl.closest('.card').dataset.id
+    const carIndex = wishlistLS.indexOf(carId)
+    if (carIndex === -1) {
+      wishlistLS.push(carId)
+      wishBtnEl.classList.add('text-warning')
+    } else {
+      wishlistLS.splice(carIndex, 1)
+      wishBtnEl.classList.remove('text-warning')
+    }
+    localStorage.setItem('wishlist', JSON.stringify(wishlistLS))
+  }
+})
 
 
 moreBtnEl.addEventListener('click', event => {
@@ -214,7 +240,7 @@ function renderCards(dataArray, DOMelement, clear) {
       }
       html += createCard(car)
     }
-  } else{
+  } else {
     html = `<h3 class="text-center text-danger">No cars :((</h3>`
   }
 
@@ -231,7 +257,7 @@ function createCard(data) {
     }
   }
 
-  return `<div class="col card mb-3">
+  return `<div class="col card mb-3" data-id="${data.id}">
     <div class="row g-0">
       <div class="col-4 card-img-wrap position-relative">
       ${data.top ? `<div class="card-top bg-success text-light">TOP</div>` : ''}
@@ -257,15 +283,14 @@ function createCard(data) {
           <div class=" d-flex justify-content-between">
             <a href="tel:${data.phone}" class="btn btn-success call-btn">Call</a>
             <div class="selection-buttons">
-              <i class="far fa-star"></i>
-              <i class="fas fa-balance-scale"></i>
+              <button class="btn btn-secondary btn-wish ${wishlistLS.includes(data.id) ? 'text-warning' : ''}"><i class="fas fa-star"></i></button>
             </div> 
           </div>
         </div>
       </div>
       <div class="col-12 card-footer text-muted">
         <p class="card-text d-flex justify-content-between">
-          <small class="text-muted card-time"><i class="far fa-clock me-2"></i>${data.timestamp}</small>
+          <small class="text-muted card-time"><i class="far fa-clock me-2"></i>${dateFormatter.format(data.timestamp)} ${timeFormatter.format(data.timestamp)}</small>
           <small class="text-muted card-views"><i class="far fa-eye me-2"></i>${data.views}</small>
         </p>
       </div>
@@ -282,3 +307,26 @@ function findSiblings(DOMelement) {
   return Array.from(DOMelement.parentElement.children).filter(child => child != DOMelement)
 }
 
+
+
+
+// const now  = new Date("2017-01-26")
+// let str = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}`
+// console.log(str);
+
+
+
+console.log(dateFormatter.format(1601652988000));
+
+
+
+function getTimeStr(dateObj = new Date()) {
+  const dateFormatter = new Intl.DateTimeFormat()
+  const timeFormatter = new Intl.DateTimeFormat(undefined, {
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+  const date = `${dateFormatter.format(dateObj)}`.replaceAll('.', '-')
+  const time = `${timeFormatter.format(dateObj)}`
+  return `${date} ${time}`
+}

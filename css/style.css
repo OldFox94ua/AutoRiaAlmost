@@ -88,8 +88,5 @@ ul {
   content: attr(data-title);
 }
 .selection-buttons  i{
-  color:#256799;
   font-size: 24px;
-  margin-right: 10px;
-  
 }
