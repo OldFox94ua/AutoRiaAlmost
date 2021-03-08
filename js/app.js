@@ -158,8 +158,6 @@ moreBtnEl.addEventListener('click', event => {
 
 searchFormEl.addEventListener('submit', function (event) {
   event.preventDefault()
-
-  console.time('search-time ->>>');
   const searchFields = ['make', 'model', 'year']
   const query = this.search.value.trim().toLowerCase().split(' ').filter(word => word.length > 1)
   CARS = JSON.parse(DATA).filter(car => {
