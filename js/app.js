@@ -14,7 +14,27 @@ const timeFormatter = new Intl.DateTimeFormat(undefined, {
   minute: '2-digit'
 })
 
-const rateUSDtoUAH = 27.8423
+
+
+const rateUSDtoUAH = getData('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5')
+
+console.log(rateUSDtoUAH)
+
+
+
+async function getData(url) {
+  try{
+    let data = await fetch(url).then(r => r.json())
+    const currentUSD = data[0].buy
+    console.log(currentUSD)
+  } catch (error) {
+    console.error('http error', error);
+  } 
+}
+
+
+
+
 
 if (!localStorage.getItem('wishlist')) {
   localStorage.setItem('wishlist', JSON.stringify([]))
@@ -24,49 +44,9 @@ const wishlistLS = JSON.parse(localStorage.getItem('wishlist'))
 
 
 renderCards(CARS, cardListEl)
-// {
-//     "id": "89aed5b8c686ebd713a62873e4cd756abab7a106",
-//     "make": "BMW",
-//     "model": "M3",
-//     "year": 2010,
-//     "img": "http://dummyimage.com/153x232.jpg/cc0000/ffffff",
-//     "color": "Goldenrod",
-//     "vin": "1G6DW677550624991",
-//     "country": "United States",
-//     "rating": 1.5,
-//     "price": 2269,
-//     "views": 5,
-//     "seller": "Ellery Girardin",
-//     "vin_check": true,
-//     "top": false,
-//     "timestamp": 1601652988000,
-//     "phone": "+1 (229) 999-8553",
-//     "fuel": "Benzin",
-//     "engine_volume": 1.4,
-//     "transmission": "CVT",
-//     "odo": 394036,
-//     "consume": { "road": 4.8, "city": 12.3, "mixed": 8.4 }
-//   }
 
 
 
-{/* <fieldset class="mb-3">
-              <legend>Fuel</legend>
-              <div class="fieldset-group d-flex flex-column">
-                <label>
-                  <input type="checkbox" name="fuel" value="Benzin">
-                  Benzin
-                </label>
-                <label>
-                  <input type="checkbox" name="fuel" value="Diesel">
-                  Diesel
-                </label>
-                <label>
-                  <input type="checkbox" name="fuel" value="Propan">
-                  Propan
-                </label>
-              </div>
-            </fieldset> */}
 
 
 filterFormEl.addEventListener('submit', function (event) {
